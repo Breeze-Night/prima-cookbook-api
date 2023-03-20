@@ -78,26 +78,6 @@ func CreateRecipe(c *gin.Context) {
 	})
 }
 
-// func EditRecipe(c *gin.Context) {
-// 	id := c.Param("id")
-
-// 	var reqRecipe models.RecipeInput
-// 	c.BindJSON(&reqRecipe)
-
-// 	recipe := models.Recipe{
-// 		Title:        reqRecipe.Title,
-// 		Description:  reqRecipe.Description,
-// 		Instructions: reqRecipe.Instructions,
-// 	}
-
-// 	config.DB.Model(&recipe).Where("id = ?", id).Updates(reqRecipe)
-
-//		c.JSON(200, gin.H{
-//			"Message": "Recipe Updated",
-//			"data":    recipe,
-//		})
-//	}
-
 func EditRecipe(c *gin.Context) {
 	recipeID := c.Param("id")
 
@@ -142,28 +122,6 @@ func EditRecipe(c *gin.Context) {
 		"data":    recipe,
 	})
 }
-
-// func DeleteRecipe(c *gin.Context) {
-// 	id := c.Param("id")
-// 	var recipe models.Recipe
-
-// 	data := config.DB.First(&recipe, "id = ?", id)
-
-// 	if data.Error != nil {
-// 		c.JSON(http.StatusNotFound, gin.H{
-// 			"satus":   "Data Not Found",
-// 			"message": "The recipe does not exist",
-// 		})
-
-// 		return
-// 	}
-
-// 	config.DB.Delete(&recipe, id)
-
-// 	c.JSON(200, gin.H{
-// 		"Message": "Recipe Deleted",
-// 	})
-// }
 
 func DeleteRecipe(c *gin.Context) {
 	recipeID := c.Param("id")
