@@ -8,6 +8,7 @@ type Recipe struct {
 	Description  string       `json:"description"`
 	Instructions string       `json:"instructions"`
 	Ingredients  []Ingredient `gorm:"many2many:recipe_ingredients;" json:"ingredients"`
+	UserID       uint         `json:"user_id"`
 }
 
 type RecipeInput struct {

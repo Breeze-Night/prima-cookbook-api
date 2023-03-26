@@ -46,7 +46,6 @@ func RegisterUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"message":  "Account created",
 		"user_id":  user.ID,
 		"email":    user.Email,
 		"username": user.Username,
@@ -92,7 +91,7 @@ func GenerateToken(c *gin.Context) {
 	}
 
 	// generate token
-	tokenString, err := auth.GenerateJWT(user.Email, user.Username)
+	tokenString, err := auth.GenerateJWT(user.Email, user.Username, user.Role)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "internal server error",
@@ -105,7 +104,6 @@ func GenerateToken(c *gin.Context) {
 
 	// response
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Welcome to Prima Cookbook",
-		"token":   tokenString,
+		"token": tokenString,
 	})
 }
