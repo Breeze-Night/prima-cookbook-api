@@ -83,6 +83,7 @@ func CreateRecipe(c *gin.Context) {
 		Description:  reqRecipe.Description,
 		Instructions: reqRecipe.Instructions,
 		UserID:       user.ID,
+		Username:     user.Username,
 	}
 
 	if err := config.DB.Create(&recipe).Error; err != nil {
@@ -215,6 +216,7 @@ func EditRecipe(c *gin.Context) {
 	recipe.Title = reqRecipe.Title
 	recipe.Description = reqRecipe.Description
 	recipe.Instructions = reqRecipe.Instructions
+	recipe.Username = user.Username
 
 	// Save updated recipe
 	if err := config.DB.Save(&recipe).Error; err != nil {
