@@ -11,6 +11,7 @@ type User struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Role     uint32 `json:"role"`
 }
 
 type TokenRequest struct {

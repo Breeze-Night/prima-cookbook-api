@@ -12,16 +12,18 @@ var jwtKey = []byte("rahasia")
 type JWTClaim struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
+	Role     uint32 `json:"role"`
 	jwt.StandardClaims
 }
 
 // GENERATE JWT Token
-func GenerateJWT(email, username string) (tokenString string, err error) {
+func GenerateJWT(email, username string, role uint32) (tokenString string, err error) {
 	expTime := time.Now().Add(1 * time.Hour)
 
 	claims := &JWTClaim{
 		Email:    email,
 		Username: username,
+		Role:     role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expTime.Unix(),
 		},
@@ -34,7 +36,7 @@ func GenerateJWT(email, username string) (tokenString string, err error) {
 }
 
 // Validate Token
-func ValidateToken(signedToken string) (err error) {
+func ValidateToken(signedToken string) (email string, role uint32, err error) {
 	token, err := jwt.ParseWithClaims(
 		signedToken,
 		&JWTClaim{},
@@ -64,6 +66,10 @@ func ValidateToken(signedToken string) (err error) {
 		err = errors.New("Token expired")
 		return
 	}
+
+	role = claims.Role
+
+	email = claims.Email
 
 	return
 }

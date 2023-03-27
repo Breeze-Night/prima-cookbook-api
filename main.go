@@ -35,16 +35,16 @@ func main() {
 		{
 			recipe.GET("/", routes.GetRecipes)
 			recipe.GET("/:id", routes.GetRecipeByID)
-			recipe.POST("/", routes.CreateRecipe)
-			recipe.PUT("/:id", routes.EditRecipe)
-			recipe.DELETE("/:id", routes.DeleteRecipe)
+			recipe.Use(middleware.Auth()).POST("/", routes.CreateRecipe)
+			recipe.Use(middleware.Auth()).PUT("/:id", routes.EditRecipe)
+			recipe.Use(middleware.Auth()).DELETE("/:id", routes.DeleteRecipe)
 		}
 
-		ingredient := v1.Group("/ingredient").Use(middleware.Auth())
+		ingredient := v1.Group("/ingredient")
 		{
 			ingredient.GET("/", routes.GetIngredients)
 			ingredient.GET("/:id", routes.GetIngredientByID)
-			ingredient.POST("/:recipe_id", routes.AddIngredientToRecipe)
+			ingredient.Use(middleware.Auth()).POST("/:recipe_id", routes.AddIngredientToRecipe)
 		}
 
 		filter := v1.Group("/filter")
