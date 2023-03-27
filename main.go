@@ -45,6 +45,8 @@ func main() {
 			ingredient.GET("/", routes.GetIngredients)
 			ingredient.GET("/:id", routes.GetIngredientByID)
 			ingredient.Use(middleware.Auth()).POST("/:recipe_id", routes.AddIngredientToRecipe)
+			ingredient.Use(middleware.Auth()).DELETE("/:recipe_id/:ingredient_id", routes.DeleteIngredientFromRecipe)
+
 		}
 
 		filter := v1.Group("/filter")
