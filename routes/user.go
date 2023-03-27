@@ -7,6 +7,7 @@ import (
 	"prima_cookbook/models"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm/clause"
 )
 
 func RegisterUser(c *gin.Context) {
@@ -106,5 +107,30 @@ func GenerateToken(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"token":   tokenString,
 		"message": "Welcome to Prima Cookbook",
+	})
+}
+
+func GetUsers(c *gin.Context) {
+	users := []models.User{}
+
+	config.DB.Preload(clause.Associations).Find(&users)
+
+	// clean and easy to read response
+	responseGetUser := []models.OutputAllUsers{}
+
+	for _, u := range users {
+		oau := models.OutputAllUsers{
+			ID:       u.ID,
+			Name:     u.Name,
+			Username: u.Username,
+			Email:    u.Email,
+			Role:     u.Role,
+		}
+		responseGetUser = append(responseGetUser, oau)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Find yourself an interesting recipe to try",
+		"data":    responseGetUser,
 	})
 }

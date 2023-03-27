@@ -29,6 +29,7 @@ func main() {
 		{
 			user.POST("/register", routes.RegisterUser)
 			user.POST("/login", routes.GenerateToken)
+			user.Use(middleware.IsAdmin()).GET("/", routes.GetUsers)
 		}
 
 		recipe := v1.Group("/recipe")

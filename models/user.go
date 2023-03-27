@@ -19,6 +19,14 @@ type TokenRequest struct {
 	Password string `json:"password"`
 }
 
+type OutputAllUsers struct {
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Role     uint32 `json:"role"`
+}
+
 func (user *User) HashPassword(password string) error {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 

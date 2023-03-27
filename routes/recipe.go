@@ -20,13 +20,13 @@ func GetRecipes(c *gin.Context) {
 	responseGetRecipe := []models.OutputAllRecipes{}
 
 	for _, r := range recipes {
-		aro := models.OutputAllRecipes{
+		oar := models.OutputAllRecipes{
 			ID:          r.ID,
 			Title:       r.Title,
 			Description: r.Description,
 			Username:    r.Username,
 		}
-		responseGetRecipe = append(responseGetRecipe, aro)
+		responseGetRecipe = append(responseGetRecipe, oar)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
