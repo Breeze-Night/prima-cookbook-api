@@ -12,8 +12,11 @@ func GetRecipesByIngredient(c *gin.Context) {
 	var recipes []models.Recipe
 	ingredientID := c.Param("ingredient_id")
 
+	// use subquery to retrieve all recipeID from recipe_ingredients table where the ingredient_id matches the provided value
+	// then retrieving the full recipe details from the recipes table where the ID is in the subquery
 	config.DB.Where("id IN (SELECT recipe_id FROM recipe_ingredients WHERE ingredient_id = ?)", ingredientID).Find(&recipes)
 
+	// response diperpendek untuk enak dibaca
 	responseGetRecipe := []models.OutputAllRecipes{}
 
 	for _, r := range recipes {

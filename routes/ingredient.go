@@ -15,6 +15,7 @@ func GetIngredients(c *gin.Context) {
 
 	config.DB.Preload(clause.Associations).Find(&ingredients)
 
+	// clean response output
 	responseGetIngredients := []models.OutputIngredients{}
 
 	for _, ingredient := range ingredients {
@@ -56,6 +57,7 @@ func GetIngredientByID(c *gin.Context) {
 		return
 	}
 
+	// clean response output
 	responseRecipes := []models.RecipesInIngredient{}
 	for _, recipe := range ingredient.Recipes {
 		rii := models.RecipesInIngredient{
@@ -125,7 +127,10 @@ func AddIngredientToRecipe(c *gin.Context) {
 		return
 	}
 
+	// check if ingredient already exist in database
 	config.DB.Where("name = ?", ingredient.Name).FirstOrCreate(&ingredient)
+
+	// adding the ingredient to the recipe's ingredients association
 	config.DB.Model(&recipe).Association("Ingredients").Append(&ingredient)
 
 	c.JSON(http.StatusCreated, gin.H{
@@ -183,6 +188,7 @@ func DeleteIngredientFromRecipe(c *gin.Context) {
 		return
 	}
 
+	// delete ingredient from the recipe by removing the association between the recipe and the ingredient
 	config.DB.Model(&recipe).Association("Ingredients").Delete(&ingredient)
 
 	c.JSON(http.StatusOK, gin.H{
