@@ -83,6 +83,38 @@ func AddIngredientToRecipe(c *gin.Context) {
 	recipeID := c.Param("recipe_id")
 
 	config.DB.First(&recipe, recipeID)
+
+	// Get user_id in context by user email
+	emailUser, exists := c.Get("x-email")
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "x-email key not found in context",
+			"message": "Bad request",
+		})
+		c.Abort()
+		return
+	}
+
+	var user models.User
+	queryRes := config.DB.Preload(clause.Associations).First(&user, "email = ?", emailUser)
+
+	if queryRes.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": fmt.Sprintf("User by email %s, not found", emailUser),
+			"data":    "data not found",
+		})
+		return
+	}
+
+	// Check if the user is the owner of the recipe
+	if recipe.UserID != user.ID {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error":   "Unauthorized",
+			"message": "You are not authorized to perform this action",
+		})
+		return
+	}
+
 	err := c.BindJSON(&ingredient)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -102,4 +134,58 @@ func AddIngredientToRecipe(c *gin.Context) {
 	})
 }
 
-// DeleteIngredientFromRecipe
+func DeleteIngredientFromRecipe(c *gin.Context) {
+	var recipe models.Recipe
+	var ingredient models.Ingredient
+	recipeID := c.Param("recipe_id")
+	ingredientID := c.Param("ingredient_id")
+
+	config.DB.First(&recipe, recipeID)
+
+	// Get user_id in context by user email
+	emailUser, exists := c.Get("x-email")
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "x-email key not found in context",
+			"message": "Bad request",
+		})
+		c.Abort()
+		return
+	}
+
+	var user models.User
+	queryRes := config.DB.Preload(clause.Associations).First(&user, "email = ?", emailUser)
+
+	if queryRes.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": fmt.Sprintf("User by email %s, not found", emailUser),
+			"data":    "data not found",
+		})
+		return
+	}
+
+	// Check if the user is the owner of the recipe
+	if recipe.UserID != user.ID {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error":   "Unauthorized",
+			"message": "You are not authorized to perform this action",
+		})
+		return
+	}
+
+	config.DB.First(&ingredient, ingredientID)
+
+	if ingredient.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error":   "Not Found",
+			"message": "Ingredient not found",
+		})
+		return
+	}
+
+	config.DB.Model(&recipe).Association("Ingredients").Delete(&ingredient)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Ingredient deleted",
+	})
+}

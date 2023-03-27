@@ -132,51 +132,6 @@ func CreateRecipe(c *gin.Context) {
 	})
 }
 
-// func EditRecipe(c *gin.Context) {
-// 	recipeID := c.Param("id")
-
-// 	var reqRecipe models.RecipeInput
-// 	err := c.BindJSON(&reqRecipe)
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{
-// 			"error":   err.Error(),
-// 			"message": "Bad request",
-// 		})
-// 		c.Abort()
-// 		return
-// 	}
-
-// 	var recipe models.Recipe
-// 	err = config.DB.First(&recipe, recipeID).Error
-// 	if err != nil {
-// 		c.JSON(http.StatusNotFound, gin.H{
-// 			"error":   "Recipe not found",
-// 			"message": "Recipe not found",
-// 		})
-// 		c.Abort()
-// 		return
-// 	}
-
-// 	recipe.Title = reqRecipe.Title
-// 	recipe.Description = reqRecipe.Description
-// 	recipe.Instructions = reqRecipe.Instructions
-
-// 	if err := config.DB.Save(&recipe).Error; err != nil {
-// 		c.JSON(500, gin.H{
-// 			"error":   err.Error(),
-// 			"message": "Internal server error",
-// 		})
-// 		c.Abort()
-// 		return
-// 	}
-
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"status":  "Success",
-// 		"message": "Updating Recipe",
-// 		"data":    recipe,
-// 	})
-// }
-
 func EditRecipe(c *gin.Context) {
 	var reqRecipe models.RecipeInput
 	err := c.BindJSON(&reqRecipe)
@@ -262,36 +217,6 @@ func EditRecipe(c *gin.Context) {
 		"data":    recipe,
 	})
 }
-
-// func DeleteRecipe(c *gin.Context) {
-// 	recipeID := c.Param("id")
-
-// 	var recipe models.Recipe
-// 	err := config.DB.First(&recipe, recipeID).Error
-// 	if err != nil {
-// 		c.JSON(http.StatusNotFound, gin.H{
-// 			"error":   "Recipe not found",
-// 			"message": "Recipe not found",
-// 		})
-// 		c.Abort()
-// 		return
-// 	}
-
-// 	if err := config.DB.Delete(&recipe).Error; err != nil {
-// 		c.JSON(500, gin.H{
-// 			"error":   err.Error(),
-// 			"message": "Internal server error",
-// 		})
-// 		c.Abort()
-// 		return
-// 	}
-
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"status":  "Success",
-// 		"message": "Deleting Recipe",
-// 		"data":    recipe,
-// 	})
-// }
 
 func DeleteRecipe(c *gin.Context) {
 	recipeID := c.Param("id")
