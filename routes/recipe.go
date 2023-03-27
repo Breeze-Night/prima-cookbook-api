@@ -13,13 +13,24 @@ import (
 
 func GetRecipes(c *gin.Context) {
 	recipes := []models.Recipe{}
-	config.DB.Find(&recipes)
 
 	config.DB.Preload(clause.Associations).Find(&recipes)
 
+	responseGetRecipe := []models.OutputAllRecipes{}
+
+	for _, r := range recipes {
+		aro := models.OutputAllRecipes{
+			ID:          r.ID,
+			Title:       r.Title,
+			Description: r.Description,
+			Username:    r.Username,
+		}
+		responseGetRecipe = append(responseGetRecipe, aro)
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Find yourself an interesting recipe to try",
-		"data":    recipes,
+		"data":    responseGetRecipe,
 	})
 }
 
@@ -27,20 +38,37 @@ func GetRecipeByID(c *gin.Context) {
 	id := c.Param("id")
 
 	var recipe models.Recipe
-
 	data := config.DB.Preload(clause.Associations).First(&recipe, "id = ?", id)
 
 	if data.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":  "Data Not Found",
-			"message": "Recipe does not exist",
+			"message": fmt.Sprintf("Recipe with id: %s does not exist", id),
 		})
 		return
 	}
 
-	c.JSON(http.StatusNotFound, gin.H{
-		"message": "Successful",
-		"data":    recipe,
+	responseIngredients := []models.IngredientsInRecipe{}
+	for _, ingredient := range recipe.Ingredients {
+		iir := models.IngredientsInRecipe{
+			ID:   ingredient.ID,
+			Name: ingredient.Name,
+		}
+		responseIngredients = append(responseIngredients, iir)
+	}
+
+	recipeOutput := models.OutputRecipeByID{
+
+		Title:        recipe.Title,
+		Description:  recipe.Description,
+		Username:     recipe.Username,
+		Instructions: recipe.Instructions,
+		Ingredients:  responseIngredients,
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("Complete recipe with id: %s", id),
+		"data":    recipeOutput,
 	})
 }
 
