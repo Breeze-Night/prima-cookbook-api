@@ -16,6 +16,7 @@ func GetRecipes(c *gin.Context) {
 
 	config.DB.Preload(clause.Associations).Find(&recipes)
 
+	// clean and easy to read response
 	responseGetRecipe := []models.OutputAllRecipes{}
 
 	for _, r := range recipes {
@@ -48,6 +49,7 @@ func GetRecipeByID(c *gin.Context) {
 		return
 	}
 
+	// clean and easy to read response
 	responseIngredients := []models.IngredientsInRecipe{}
 	for _, ingredient := range recipe.Ingredients {
 		iir := models.IngredientsInRecipe{
@@ -106,6 +108,8 @@ func CreateRecipe(c *gin.Context) {
 		return
 	}
 
+	// make the user to only input JSON title, description, and instructions only
+	// add userID and username automatically without manual JSON input
 	recipe := models.Recipe{
 		Title:        reqRecipe.Title,
 		Description:  reqRecipe.Description,
@@ -254,6 +258,7 @@ func DeleteRecipe(c *gin.Context) {
 		return
 	}
 
+	// Check if the user is authorized to delete the recipe
 	if recipe.UserID != user.ID {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "User is not authorized to delete this recipe",
