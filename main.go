@@ -51,7 +51,8 @@ func main() {
 
 		filter := v1.Group("/filter")
 		{
-			filter.GET("/recipe/:ingredient_id", routes.GetRecipesByIngredient)
+			filter.GET("/recipe/ingredient/:ingredient_id", routes.GetRecipesByIngredient)
+			filter.GET("/recipe/user/:user_id", routes.GetRecipeByUserID)
 		}
 
 	}

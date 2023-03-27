@@ -35,3 +35,27 @@ func GetRecipesByIngredient(c *gin.Context) {
 		"data":    responseGetRecipe,
 	})
 }
+
+func GetRecipeByUserID(c *gin.Context) {
+	var recipes []models.Recipe
+	userID := c.Param("user_id")
+
+	// retrieve all recipes associated with the specified user ID
+	config.DB.Where("user_id = ?", userID).Find(&recipes)
+
+	responseGetRecipe := []models.OutputAllRecipes{}
+
+	for _, r := range recipes {
+		aro := models.OutputAllRecipes{
+			ID:          r.ID,
+			Title:       r.Title,
+			Description: r.Description,
+			Username:    r.Username,
+		}
+		responseGetRecipe = append(responseGetRecipe, aro)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": responseGetRecipe,
+	})
+}
