@@ -82,7 +82,7 @@ func GenerateToken(c *gin.Context) {
 	credentialError := user.CheckPassword(request.Password)
 	if credentialError != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"message": "Password not match",
+			"message": "Incorrect password",
 			"error":   credentialError.Error(),
 		})
 
@@ -104,6 +104,7 @@ func GenerateToken(c *gin.Context) {
 
 	// response
 	c.JSON(http.StatusOK, gin.H{
-		"token": tokenString,
+		"token":   tokenString,
+		"message": "Welcome to Prima Cookbook",
 	})
 }

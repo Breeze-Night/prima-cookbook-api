@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"prima_cookbook/config"
 	"prima_cookbook/models"
@@ -30,6 +31,7 @@ func GetRecipesByIngredient(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": responseGetRecipe,
+		"message": fmt.Sprintf("Here are all recipes with ingredient_id: %s", ingredientID),
+		"data":    responseGetRecipe,
 	})
 }

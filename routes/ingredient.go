@@ -74,7 +74,7 @@ func GetIngredientByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Successful",
+		"message": fmt.Sprintf("The ingredient with id: %s", id),
 		"data":    responseGetIngredients,
 	})
 }
